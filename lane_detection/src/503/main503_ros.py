@@ -25,7 +25,7 @@ def img_callback(msg):
 
     seq = msg.header.seq
 
-    cv2.imwrite("inputs/input_{}.png".format(str(msg.header.seq)), img) 
+    cv2.imwrite("/home/nvidia/inputs/input_{}.png".format(str(msg.header.seq)), img) 
 
     try:
         detector = LaneDetection([img.copy(), seq])
@@ -70,9 +70,9 @@ def img_callback(msg):
         cv2.putText(comb, "Mirroring: {}".format(mirror), org4, cv2.FONT_HERSHEY_SIMPLEX,  
                 0.5, (120, 180, 75), 1, cv2.LINE_AA) 
 
-        cv2.imshow("output", comb)
+        #cv2.imshow("output", comb)
         cv2.waitKey(1)
-        cv2.imwrite("outputs/output_{}.png".format(str(msg.header.seq)), comb) 
+        cv2.imwrite("/home/nvidia/outputs/output_{}.png".format(str(msg.header.seq)), comb) 
         
         
 
@@ -81,7 +81,7 @@ def img_callback(msg):
 
         print(traceback.format_exc())
         
-        cv2.imshow("Failure", img.copy())
+        #cv2.imshow("Failure", img.copy())
         cv2.waitKey(1)
 
         #quit()
@@ -133,7 +133,13 @@ if __name__ == "__main__":
     path_pub = rospy.Publisher("/lane_detection/path", Path, queue_size=10)
 
 
+    """
     os.chdir("/media/nvidia/sdcard/opencv_logs")
+
+
+
+    """
+    
     os.system("rm -rf inputs/")
     os.system("mkdir inputs")
 

@@ -215,8 +215,6 @@ class LaneDetection():
 
             tf_laneContours = self.tf_image(img=laneLines_img.copy(), mode='birdeye')
 
-            cv2.imshow("left.copy()", laneLines_img.copy())
-
             tfimg_l = np.split(tf_laneContours, 2, axis=1)[0]
             blendedImL = np.split(blendedIm, 2, axis=1)[0]
 
@@ -241,8 +239,6 @@ class LaneDetection():
             laneLines_img, blendedIm = self.plot_lane_lines(right_lines)
 
             tf_laneContours = self.tf_image(img=laneLines_img.copy(), mode='birdeye')
-
-            cv2.imshow("right.copy()", laneLines_img.copy())
 
             tfimg_r = np.split(tf_laneContours, 2, axis=1)[1]
             blendedImR = np.split(blendedIm, 2, axis=1)[1]
@@ -342,8 +338,12 @@ class LaneDetection():
         blendedImg_out[ind] = 255
 
 
-        cv2.imshow("ii", ii)
-        cv2.imshow("pr_img.copy()", pr_img.copy())
+
+        
+        
+
+
+
         
         
 

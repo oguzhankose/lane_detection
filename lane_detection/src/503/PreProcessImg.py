@@ -137,30 +137,33 @@ class PreProcessImg():
         also assumes edges are long lines (not small pixels regions)
         """
 
-        v = np.median(connectedImg.copy())
-        sigma = 0.33
+        #v = np.median(connectedImg.copy())
+        #sigma = 0.33
         #---- apply optimal Canny edge detection using the computed median----
-        lower_thresh = int(max(0, (1.0 - sigma) * v))
-        upper_thresh = int(min(255, (1.0 + sigma) * v))
-        edgesImg = cv2.Canny(connectedImg.copy(), lower_thresh, upper_thresh)
+        #lower_thresh = int(max(0, (1.0 - sigma) * v))
+        #upper_thresh = int(min(255, (1.0 + sigma) * v))
+        #edgesImg = cv2.Canny(connectedImg.copy(), lower_thresh, upper_thresh)
+
+
+        morphImg = cv2.morphologyEx(connectedImg.copy(), cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_CROSS, (51,51)))
         
         
-        height, width = edgesImg.shape
+        height, width = morphImg.shape
         center_t, center_b = ((width/2, 0), (width/2, height))
         
         #   Left Mask
         l_vertices = np.array([[(0,0), (0, height), center_b, center_t]], dtype=np.int32)
         # create image only where mask and edge Detection image are the same
-        left_img = cv2.bitwise_and(edgesImg.copy(), cv2.fillPoly(np.zeros_like(edgesImg.copy()) , l_vertices, 255))
+        left_img = cv2.bitwise_and(morphImg.copy(), cv2.fillPoly(np.zeros_like(morphImg.copy()) , l_vertices, 255))
 
         #   Right Mask
         r_vertices = np.array([[center_t, center_b, (width, height), (width, 0)]], dtype=np.int32)
         # create image only where mask and edge Detection image are the same
-        right_img = cv2.bitwise_and(edgesImg.copy(), cv2.fillPoly(np.zeros_like(edgesImg.copy()) , r_vertices, 255))
+        right_img = cv2.bitwise_and(morphImg.copy(), cv2.fillPoly(np.zeros_like(morphImg.copy()) , r_vertices, 255))
 
        
 
-        return connectedImg, left_img, right_img
+        return morphImg, left_img, right_img
 
         
 

@@ -23,6 +23,8 @@ def img_callback(img, seq):
 
 
     try:
+        cv2.imwrite("inputs/input_{}.png".format(str(msg.header.seq)), img) 
+        
         detector = LaneDetection([img.copy(), seq])
         
         pre_process = PreProcessImg([img.copy(), seq])
@@ -65,9 +67,9 @@ def img_callback(img, seq):
         cv2.putText(comb, "Mirroring: {}".format(mirror), org4, cv2.FONT_HERSHEY_SIMPLEX,  
                 0.5, (120, 180, 75), 1, cv2.LINE_AA) 
 
-        cv2.imshow("output", comb)
+        #cv2.imshow("output", comb)
         cv2.waitKey(1)
-        #cv2.imwrite("outputs/output_{}.png".format(str(msg.header.seq)), comb) 
+        cv2.imwrite("outputs/output_{}.png".format(str(msg.header.seq)), comb) 
         
         
 
@@ -117,7 +119,7 @@ def img_callback(img, seq):
 
 if __name__ == "__main__":
 
-    folder = "/media/nvidia/sdcard/opencv_logs//test/"
+    folder = "/media/nvidia/sdcard/opencv_logs/test2/"
     
 
     for filename in os.listdir(folder):
@@ -130,13 +132,13 @@ if __name__ == "__main__":
         
 
 
-    """
+    
     os.chdir("/media/nvidia/sdcard/opencv_logs")
     os.system("rm -rf inputs/")
     os.system("mkdir inputs")
 
     os.system("rm -rf outputs/")
     os.system("mkdir outputs")
-    """
+    
     rospy.spin()
 

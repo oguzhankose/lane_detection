@@ -62,15 +62,17 @@ class DriverNode():
 
         ack_msg.header.frame_id = "odom"
 
-        steer = self.convert_trans_rot_vel_to_steering_angle(vel_x, vel_y, self.wheelbase)
+        #steer = self.convert_trans_rot_vel_to_steering_angle(vel_x, vel_y, self.wheelbase)
+        steer = vel_y
 
         print("\nCalculated Velocity : {}".format(vel_x))
         print("Calculated Steering Angle : {}".format(math.degrees(steer)))
 
-        cmd_vel_x = max(min(self.max_vel_x, vel_x), self.min_vel_x)
+        #cmd_vel_x = max(min(self.max_vel_x, vel_x), self.min_vel_x)
+        
         steering_angle = max(min(math.radians(self.max_theta), steer), math.radians(self.min_theta))
 
-        self.vel_x = 1.0/2
+        self.vel_x = 1.0
         
         self.steering = 1*(steering_angle + orientation)
 
@@ -80,7 +82,7 @@ class DriverNode():
         ack_msg.drive.steering_angle = self.steering
 
         print(self.mode)
-        print("\nVelocity : {}".format(cmd_vel_x))
+        print("\nVelocity : {}".format(self.vel_x))
         print("Steering Angle : {}".format(math.degrees(steering_angle)))
 
 
@@ -95,7 +97,7 @@ class DriverNode():
 
         if self.type == "path":
 
-            target_x = msg.poses[0].pose.position.x 
+            target_x = msg.poses[0].pose.position.x
             target_y = msg.poses[0].pose.position.y 
 
             ori = msg.poses[0].pose.orientation
@@ -104,16 +106,31 @@ class DriverNode():
 
             target_ori = 0      ####################
 
-            vel_x = target_x/20 
 
-            vel_y = target_y/20
 
-            vel_x = vel_x * 0.4
-            vel_y = vel_y * -0.15
 
-            print(vel_y)
 
-            self.pub_command(vel_x, vel_y, target_ori)
+
+            ack_msg = AckermannDriveStamped()
+            ack_msg.header.frame_id = "odom"
+
+
+            steering_angle = self.convert_trans_rot_vel_to_steering_angle(target_x, target_y, self.wheelbase) * -2
+            speed = 0.6
+
+            ack_msg.drive.speed = speed
+            ack_msg.drive.steering_angle = steering_angle
+
+            print(self.mode)
+            print("\nVelocity : {}".format(speed))
+            print("Steering Angle : {0} target y : {1}".format(math.degrees(steering_angle), target_y))
+
+
+            if(self.mode == "AUTO"):
+                self.ack_pub.publish(ack_msg)
+            else:
+                pass
+
 
 
 
