@@ -75,7 +75,10 @@ class LaneDetection():
 
     def get_c_points(self, c_img):
 
-        contours, _ = cv2.findContours(c_img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        try:
+            contours, _ = cv2.findContours(c_img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        except:
+            _, contours, _ = cv2.findContours(c_img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
         px = []
         py = []
